@@ -1,4 +1,4 @@
-import 'package:desafio_orbytis/app/home.dart';
+import 'package:desafio_orbytis/app/app.dart';
 import 'package:flutter/material.dart';
 
 void main() {

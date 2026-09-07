@@ -1,5 +1,5 @@
 import 'package:desafio_orbytis/service/auth_service.dart';
-import 'package:desafio_orbytis/pages/home_page.dart';
+import 'package:desafio_orbytis/pages/work_orders_list_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const WorkOrdersListPage()),
       );
     } on Exception catch (e) {
       if (!mounted) return;
