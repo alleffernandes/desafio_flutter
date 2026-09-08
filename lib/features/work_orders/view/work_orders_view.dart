@@ -2,17 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../auth/cubit/auth_cubit.dart';
 import '../cubit/work_orders_cubit.dart';
 import '../cubit/work_orders_state.dart';
 
 class WorkOrdersView extends StatelessWidget {
   const WorkOrdersView({super.key});
 
+  void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Sair'),
+        content: const Text('Tem certeza que deseja sair da sua conta?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              context.read<AuthCubit>().logout();
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('Sair'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        leading: IconButton(
+          tooltip: 'Logout',
+          onPressed: () => _confirmLogout(context),
+          icon: const Icon(Icons.logout),
+        ),
         actions: [
           IconButton(
             tooltip: 'Histórico',
