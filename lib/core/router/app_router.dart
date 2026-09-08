@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:desafio_orbytis/core/database/database_service.dart';
+import 'package:desafio_orbytis/features/history/cubit/history_cubit.dart';
+import 'package:desafio_orbytis/features/history/view/history_view.dart';
 import 'package:desafio_orbytis/features/inspection/cubit/inspection_cubit.dart';
 import 'package:desafio_orbytis/features/inspection/repository/inspection_repository.dart';
 import 'package:desafio_orbytis/features/inspection/view/inspection_view.dart';
@@ -73,6 +75,13 @@ class AppRouter {
             child: InspectionView(workOrderId: idDaOrdem),
           );
         },
+      ),
+      GoRoute(
+        path: '/history',
+        builder: (context, state) => BlocProvider(
+          create: (context) => HistoryCubit()..loadHistory(),
+          child: const HistoryView(),
+        ),
       ),
     ],
   );

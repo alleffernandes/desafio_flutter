@@ -11,7 +11,19 @@ class WorkOrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Ordens de Serviço')),
+      appBar: AppBar(
+        centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Histórico',
+            onPressed: () {
+              context.push('/history');
+            },
+            icon: const Icon(Icons.history),
+          ),
+        ],
+        title: const Text('Ordens de Serviço'),
+      ),
       body: BlocBuilder<WorkOrdersCubit, WorkOrdersState>(
         builder: (context, state) {
           if (state is WorkOrdersInitial || state is WorkOrdersLoading) {
