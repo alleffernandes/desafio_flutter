@@ -1,6 +1,7 @@
+import 'package:desafio_orbytis/features/auth/cubit/auth_cubit.dart';
 import 'package:desafio_orbytis/service/auth_service.dart';
-import 'package:desafio_orbytis/pages/work_orders_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,16 +24,13 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => _isLoading = true);
 
     try {
-      await _authService.fazerLogin(
+      final token = await _authService.fazerLogin(
         _emailController.text.trim(),
         _passwordController.text,
       );
 
       if (!mounted) return;
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const WorkOrdersListPage()),
-      );
+      await context.read<AuthCubit>().setAuthenticated(token);
     } on Exception catch (e) {
       if (!mounted) return;
 

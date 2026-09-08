@@ -8,7 +8,7 @@ class AuthService {
     ),
   );
 
-  Future<void> fazerLogin(String email, String password) async {
+  Future<String> fazerLogin(String email, String password) async {
     try {
       final response = await dio.post(
         '/auth/login',
@@ -21,7 +21,9 @@ class AuthService {
 
         print('Login de sucesso! Bem-vindo(a), $userName');
         print('Token salvo: $accessToken');
+        return accessToken as String;
       }
+      throw Exception('Erro ao realizar login.');
     } on DioException catch (e) {
       if (e.response != null) {
         if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
