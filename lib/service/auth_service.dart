@@ -1,12 +1,9 @@
 import 'package:dio/dio.dart';
 
 class AuthService {
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://10.0.2.2:3000',
-      connectTimeout: const Duration(seconds: 5),
-    ),
-  );
+  final Dio dio;
+
+  AuthService(this.dio);
 
   Future<String> fazerLogin(String email, String password) async {
     try {

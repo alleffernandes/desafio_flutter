@@ -1,3 +1,4 @@
+import 'package:desafio_orbytis/core/di/service_locator.dart';
 import 'package:desafio_orbytis/features/auth/cubit/auth_cubit.dart';
 import 'package:desafio_orbytis/service/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
+  final _authService = sl<AuthService>();
   bool _isLoading = false;
   bool _obscurePassword = true;
 

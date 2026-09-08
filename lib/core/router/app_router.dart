@@ -8,10 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/cubit/auth_cubit.dart';
 import '../../features/auth/cubit/auth_state.dart';
 import '../../features/work_orders/cubit/work_orders_cubit.dart';
-import '../../features/work_orders/repository/work_orders_repository.dart';
 import '../../features/work_orders/view/work_orders_screen.dart';
-
-import 'package:dio/dio.dart';
+import '../di/service_locator.dart';
 
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
@@ -57,16 +55,7 @@ class AppRouter {
       GoRoute(
         path: '/work-orders',
         builder: (context, state) => BlocProvider(
-          create: (context) {
-            final dio = Dio(
-              BaseOptions(
-                baseUrl: 'http://10.0.2.2:3000',
-                connectTimeout: const Duration(seconds: 5),
-              ),
-            );
-            final repository = WorkOrdersRepository(dio);
-            return WorkOrdersCubit(repository: repository)..fetchWorkOrders();
-          },
+          create: (context) => sl<WorkOrdersCubit>()..fetchWorkOrders(),
           child: const WorkOrdersScreen(),
         ),
       ),
