@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../core/router/app_router.dart';
 import '../core/storage/secure_storage_service.dart';
 import '../features/auth/cubit/auth_cubit.dart';
@@ -18,11 +19,9 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-    // Instancia o Cubit e já dispara a verificação de autenticação
     _authCubit = AuthCubit(secureStorageService: SecureStorageService());
     _authCubit.checkAuth();
-    
-    // Configura o router passando o cubit para ele ouvir
+
     _appRouter = AppRouter(_authCubit);
   }
 
@@ -36,9 +35,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _authCubit,
-      child: MaterialApp.router(
-        routerConfig: _appRouter.router,
-      ),
+      child: MaterialApp.router(routerConfig: _appRouter.router),
     );
   }
 }
