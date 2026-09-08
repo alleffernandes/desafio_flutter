@@ -1,6 +1,10 @@
 import 'dart:async';
 
-import 'package:desafio_orbytis/pages/login_page.dart';
+import 'package:desafio_orbytis/core/database/database_service.dart';
+import 'package:desafio_orbytis/features/inspection/cubit/inspection_cubit.dart';
+import 'package:desafio_orbytis/features/inspection/repository/inspection_repository.dart';
+import 'package:desafio_orbytis/features/inspection/view/inspection_view.dart';
+import 'package:desafio_orbytis/view/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/cubit/auth_cubit.dart';
 import '../../features/auth/cubit/auth_state.dart';
 import '../../features/work_orders/cubit/work_orders_cubit.dart';
-import '../../features/work_orders/view/work_orders_screen.dart';
+import '../../features/work_orders/view/work_orders_view.dart';
 import '../di/service_locator.dart';
 
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -51,13 +55,24 @@ class AppRouter {
       return null;
     },
     routes: [
-      GoRoute(path: '/login', builder: (context, state) => LoginPage()),
+      GoRoute(path: '/login', builder: (context, state) => LoginView()),
       GoRoute(
         path: '/work-orders',
         builder: (context, state) => BlocProvider(
           create: (context) => sl<WorkOrdersCubit>()..fetchWorkOrders(),
-          child: const WorkOrdersScreen(),
+          child: const WorkOrdersView(),
         ),
+      ),
+      GoRoute(
+        path: '/inspection/:id',
+        builder: (context, state) {
+          final String idDaOrdem = state.pathParameters['id']!;
+          return BlocProvider(
+            create: (context) =>
+                InspectionCubit(InspectionRepository(DatabaseService())),
+            child: InspectionView(workOrderId: idDaOrdem),
+          );
+        },
       ),
     ],
   );

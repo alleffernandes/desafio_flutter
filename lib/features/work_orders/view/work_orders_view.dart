@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../cubit/work_orders_cubit.dart';
 import '../cubit/work_orders_state.dart';
 
-class WorkOrdersScreen extends StatelessWidget {
-  const WorkOrdersScreen({super.key});
+class WorkOrdersView extends StatelessWidget {
+  const WorkOrdersView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +51,18 @@ class WorkOrdersScreen extends StatelessWidget {
                   final id = order['id'] ?? order['_id'] ?? '?';
                   final title = order['title'] ?? order['name'] ?? 'Ordem #$id';
                   final description =
-                      order['description'] ?? order['details'] ?? 'Sem descrição';
+                      order['description'] ??
+                      order['details'] ??
+                      'Sem descrição';
 
                   return ListTile(
                     title: Text(title.toString()),
                     subtitle: Text(description.toString()),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      final id = order['id'].toString();
+                      context.push('/inspection/$id');
+                    },
                   );
                 },
               ),
