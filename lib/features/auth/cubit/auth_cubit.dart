@@ -24,19 +24,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> login(String email, String password) async {
-    emit(AuthLoading());
-    try {
-      final fakeToken =
-          'fake_jwt_token_${DateTime.now().millisecondsSinceEpoch}';
-      await _secureStorageService.saveToken(fakeToken);
-
-      emit(Authenticated());
-    } catch (_) {
-      emit(Unauthenticated());
-    }
-  }
-
   Future<void> setAuthenticated(String token) async {
     emit(AuthLoading());
     await _secureStorageService.saveToken(token);

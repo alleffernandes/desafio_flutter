@@ -7,7 +7,6 @@ environment:
   sdk: ^3.13.2
 
 dependencies:
-  connectivity_plus: ^7.3.1
   dio: ^5.11.1
   flutter:
     sdk: flutter

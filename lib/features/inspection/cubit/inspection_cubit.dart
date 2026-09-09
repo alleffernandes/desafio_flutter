@@ -1,20 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:desafio_orbytis/features/inspection/repository/inspection_repository.dart';
+import 'package:desafio_orbytis/core/database/database_service.dart';
 
 import 'inspection_state.dart';
 
 class InspectionCubit extends Cubit<InspectionState> {
-  final InspectionRepository _repository;
+  final DatabaseService _databaseService;
   final ImagePicker _imagePicker = ImagePicker();
 
-  InspectionCubit(this._repository) : super(const InspectionState());
+  InspectionCubit(this._databaseService) : super(const InspectionState());
 
   Future<void> loadDraft(int id) async {
     emit(state.copyWith(isLoading: true));
     try {
-      final data = await _repository.getInspectionById(id);
+      final data = await _databaseService.getInspectionById(id);
       if (data != null) {
         emit(
           InspectionState(
@@ -101,9 +101,9 @@ class InspectionCubit extends Cubit<InspectionState> {
       };
 
       if (state.isEditing) {
-        await _repository.updateInspection(state.editingId!, data);
+        await _databaseService.updateInspection(state.editingId!, data);
       } else {
-        await _repository.saveInspection(data);
+        await _databaseService.insert(data);
       }
       emit(state.copyWith(isLoading: false, isSaved: true));
     } catch (e) {

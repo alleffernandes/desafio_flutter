@@ -55,15 +55,6 @@ class DatabaseService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getInspectionsByWorkOrderId(String id) async {
-    final db = await database;
-    return await db.query(
-      'inspections',
-      where: 'work_order_id = ?',
-      whereArgs: [id],
-    );
-  }
-
   Future<Map<String, dynamic>?> getInspectionById(int id) async {
     final db = await database;
     final result = await db.query(

@@ -5,7 +5,6 @@ import 'package:desafio_orbytis/features/history/cubit/history_cubit.dart';
 import 'package:desafio_orbytis/features/history/view/history_view.dart';
 import 'package:desafio_orbytis/features/inspection/cubit/inspection_cubit.dart';
 import 'package:desafio_orbytis/features/inspection/cubit/inspection_state.dart';
-import 'package:desafio_orbytis/features/inspection/repository/inspection_repository.dart';
 import 'package:desafio_orbytis/features/inspection/view/inspection_view.dart';
 import 'package:desafio_orbytis/view/login_view.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ class AppRouter {
           final int inspectionId = int.parse(state.pathParameters['id']!);
           return BlocProvider(
             create: (context) =>
-                InspectionCubit(InspectionRepository(DatabaseService())),
+                InspectionCubit(DatabaseService()),
             child: _EditInspectionLoader(inspectionId: inspectionId),
           );
         },
@@ -83,7 +82,7 @@ class AppRouter {
           final String idDaOrdem = state.pathParameters['id']!;
           return BlocProvider(
             create: (context) =>
-                InspectionCubit(InspectionRepository(DatabaseService())),
+                InspectionCubit(DatabaseService()),
             child: InspectionView(workOrderId: idDaOrdem),
           );
         },
