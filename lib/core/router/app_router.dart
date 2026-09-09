@@ -4,6 +4,7 @@ import 'package:desafio_orbytis/core/database/database_service.dart';
 import 'package:desafio_orbytis/features/history/cubit/history_cubit.dart';
 import 'package:desafio_orbytis/features/history/view/history_view.dart';
 import 'package:desafio_orbytis/features/inspection/cubit/inspection_cubit.dart';
+import 'package:desafio_orbytis/features/inspection/cubit/inspection_state.dart';
 import 'package:desafio_orbytis/features/inspection/repository/inspection_repository.dart';
 import 'package:desafio_orbytis/features/inspection/view/inspection_view.dart';
 import 'package:desafio_orbytis/view/login_view.dart';
@@ -66,6 +67,17 @@ class AppRouter {
         ),
       ),
       GoRoute(
+        path: '/inspection/edit/:id',
+        builder: (context, state) {
+          final int inspectionId = int.parse(state.pathParameters['id']!);
+          return BlocProvider(
+            create: (context) =>
+                InspectionCubit(InspectionRepository(DatabaseService())),
+            child: _EditInspectionLoader(inspectionId: inspectionId),
+          );
+        },
+      ),
+      GoRoute(
         path: '/inspection/:id',
         builder: (context, state) {
           final String idDaOrdem = state.pathParameters['id']!;
@@ -85,4 +97,39 @@ class AppRouter {
       ),
     ],
   );
+}
+
+class _EditInspectionLoader extends StatefulWidget {
+  final int inspectionId;
+
+  const _EditInspectionLoader({required this.inspectionId});
+
+  @override
+  State<_EditInspectionLoader> createState() => _EditInspectionLoaderState();
+}
+
+class _EditInspectionLoaderState extends State<_EditInspectionLoader> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<InspectionCubit>().loadDraft(widget.inspectionId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<InspectionCubit, InspectionState>(
+      builder: (context, state) {
+        if (state.isLoading || !state.isEditing) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        return InspectionView(
+          workOrderId: state.workOrderId ?? '',
+          editingId: widget.inspectionId,
+        );
+      },
+    );
+  }
 }

@@ -105,7 +105,11 @@ class WorkOrdersView extends StatelessWidget {
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
                       final id = order['id'].toString();
-                      context.push('/inspection/$id');
+                      context.push('/inspection/$id').then((_) {
+                        if (context.mounted) {
+                          context.read<WorkOrdersCubit>().fetchWorkOrders();
+                        }
+                      });
                     },
                   );
                 },

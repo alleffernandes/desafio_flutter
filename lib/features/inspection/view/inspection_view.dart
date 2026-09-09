@@ -5,22 +5,57 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:desafio_orbytis/features/inspection/cubit/inspection_cubit.dart';
 import 'package:desafio_orbytis/features/inspection/cubit/inspection_state.dart';
 
-class InspectionView extends StatelessWidget {
+class InspectionView extends StatefulWidget {
   final String workOrderId;
+  final int? editingId;
 
-  InspectionView({super.key, required this.workOrderId});
+  const InspectionView({super.key, required this.workOrderId, this.editingId});
 
+  @override
+  State<InspectionView> createState() => _InspectionViewState();
+}
+
+class _InspectionViewState extends State<InspectionView> {
   final TextEditingController _observationController = TextEditingController();
+  bool _hasLoadedDraft = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _observationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.editingId != null;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Nova Inspeção'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(isEditing ? 'Editar Inspeção' : 'Nova Inspeção'),
+        centerTitle: true,
+      ),
       body: BlocConsumer<InspectionCubit, InspectionState>(
         listener: (context, state) {
+          // Pre-fill observation from loaded draft (only once)
+          if (state.observation != null && !_hasLoadedDraft) {
+            _observationController.text = state.observation!;
+            _hasLoadedDraft = true;
+          }
+
           if (state.isSaved) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Inspeção salva com sucesso!')),
+              SnackBar(
+                content: Text(
+                  isEditing
+                      ? 'Inspeção atualizada com sucesso!'
+                      : 'Inspeção salva com sucesso!',
+                ),
+              ),
             );
             Navigator.of(context).pop();
           }
@@ -36,7 +71,7 @@ class InspectionView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Ordem de Serviço: $workOrderId',
+                  'Ordem de Serviço: ${widget.workOrderId}',
                   style: Theme.of(context).textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
@@ -100,7 +135,7 @@ class InspectionView extends StatelessWidget {
                       child: OutlinedButton(
                         onPressed: () {
                           context.read<InspectionCubit>().saveForm(
-                            workOrderId,
+                            widget.workOrderId,
                             _observationController.text,
                             true,
                           );
@@ -113,7 +148,7 @@ class InspectionView extends StatelessWidget {
                       child: FilledButton(
                         onPressed: () {
                           context.read<InspectionCubit>().saveForm(
-                            workOrderId,
+                            widget.workOrderId,
                             _observationController.text,
                             false,
                           );

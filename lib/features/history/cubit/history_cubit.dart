@@ -21,7 +21,10 @@ class HistoryState {
 class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit() : super(const HistoryState());
 
+  String? _currentFilter;
+
   Future<void> loadHistory([String? filterStatus]) async {
+    _currentFilter = filterStatus;
     emit(state.copyWith(isLoading: true));
 
     try {
@@ -36,15 +39,20 @@ class HistoryCubit extends Cubit<HistoryState> {
           orderBy: 'id DESC',
         );
       } else {
-        result = await db.query(
-          'inspections',
-          orderBy: 'id DESC',
-        );
+        result = await db.query('inspections', orderBy: 'id DESC');
       }
 
       emit(state.copyWith(isLoading: false, inspections: result));
     } catch (e) {
       emit(state.copyWith(isLoading: false, inspections: []));
     }
+  }
+
+  Future<void> deleteInspection(int id) async {
+    try {
+      final db = await DatabaseService().database;
+      await db.delete('inspections', where: 'id = ?', whereArgs: [id]);
+      await loadHistory(_currentFilter);
+    } catch (e) {}
   }
 }

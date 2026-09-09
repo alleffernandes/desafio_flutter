@@ -63,4 +63,42 @@ class DatabaseService {
       whereArgs: [id],
     );
   }
+
+  Future<Map<String, dynamic>?> getInspectionById(int id) async {
+    final db = await database;
+    final result = await db.query(
+      'inspections',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<int> updateInspection(int id, Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.update(
+      'inspections',
+      data,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> deleteInspection(int id) async {
+    final db = await database;
+    return await db.delete(
+      'inspections',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<List<String>> getModifiedWorkOrderIds() async {
+    final db = await database;
+    final result = await db.query(
+      'inspections',
+      columns: ['work_order_id'],
+    );
+    return result.map((e) => e['work_order_id'].toString()).toList();
+  }
 }
