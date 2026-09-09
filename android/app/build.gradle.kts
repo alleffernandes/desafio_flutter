@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.fernandes.desafio_orbytis"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
